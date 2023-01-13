@@ -11,6 +11,7 @@ function App() {
     const [offset, setOffset] = useState(0);
     const [hasNext, setHasNext] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+    const [loadingError, setLoadingError] = useState(null);
 
     const sortedItems = listItems.sort((a, b) => b[order] - a[order]);
 
@@ -25,14 +26,15 @@ function App() {
     }
 
     // Load items
-    const handleLoadClick = async (options) => {
+    const handleLoad = async (options) => {
         
         let result;
         try {
             setIsLoading(true);
+            setLoadingError(null);
             result = await getReviews(options);
         } catch (error) {
-            console.error(error);
+            setLoadingError(error);
             return;
         } finally {
             setIsLoading(false);
@@ -51,12 +53,12 @@ function App() {
 
     // Load more items
     const handleLoadMore = async () => {
-        handleLoadClick({order, offset, limit: LIMIT});
+        handleLoad({order, offset, limit: LIMIT});
     }
 
     // Load items (default)
     useEffect(() => {
-        handleLoadClick({order, offset: 0, limit: LIMIT});
+        handleLoad({order, offset: 0, limit: LIMIT});
     }, [order])
 
   return (
@@ -66,8 +68,8 @@ function App() {
             <button onClick={handleBestClick}>베스트순</button>
         </div>
         <ReviewList items={sortedItems} onDelete={handleDelete}/>
-        <button onClick={handleLoadClick}>불러오기</button>
         {hasNext && (<button disabled={isLoading} onClick={handleLoadMore}>더보기</button>)}
+        {loadingError?.message && <span>{loadingError.message}</span>}
     </div>
   );
 }
