@@ -27,3 +27,6 @@ var fullYear = now.getFullYear; 20xx년
  var min = now.getMinutes(); //분
  var sec = now.getSeconds(); //초
  var milsec = now.getMilliseconds(); //밀리초
+
+ 3. file input의 경우 value를 직접 설정할 수 없는 비제어 컴포넌트로 사용해야만 한다. 
+    (해킹방지 아님 오류 발생)
