@@ -1,5 +1,5 @@
 import Rating from "./Rating";
-import "./ReviewList.css";
+import './styles/ReviewList.css';
 
 function formatDate(value) {
     const date = new Date(value);

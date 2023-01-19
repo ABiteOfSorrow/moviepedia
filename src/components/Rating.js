@@ -1,4 +1,4 @@
-import './Rating.css';
+import './styles/Rating.css'
 
 const RATINGS = [1, 2, 3, 4, 5];
 
@@ -15,7 +15,12 @@ function Rating({ className, value = 0, onSelect, onHover, onMouseOut }) {
     return (
         <div className={className} onMouseOut={onMouseOut}>
             {RATINGS.map((rating) => (
-                <Star key={rating} selected={value >= rating} rating={rating} onSelect={onSelect} onHover={onHover} />
+                <Star 
+                    key={rating} 
+                    selected={value >= rating} 
+                    rating={rating} 
+                    onSelect={onSelect} 
+                    onHover={onHover} />
             ))} 
         </div>
     )

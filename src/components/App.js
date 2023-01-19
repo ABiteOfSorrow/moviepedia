@@ -1,6 +1,6 @@
 import ReviewList from "./ReviewList";
 import ReviewForm from "./ReviewForm";
-import getReviews from "../api";
+import { getReviews } from "../api";
 import { useState, useEffect } from "react";
 
 const LIMIT = 6;
