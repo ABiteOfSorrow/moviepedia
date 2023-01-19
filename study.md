@@ -28,5 +28,21 @@ var fullYear = now.getFullYear; 20xx년
  var sec = now.getSeconds(); //초
  var milsec = now.getMilliseconds(); //밀리초
 
- 3. file input의 경우 value를 직접 설정할 수 없는 비제어 컴포넌트로 사용해야만 한다. 
+3. file input의 경우 value를 직접 설정할 수 없는 비제어 컴포넌트로 사용해야만 한다. 
     (해킹방지 아님 오류 발생)
+
+4. 컴포넌트 상태에서 외부의 상태를 바꾸는걸 sideEffect라고 한다.
+
+ useEffect(() => {
+        
+        if (!value) return;
+                            // sideEffect
+        const nextPreview = URL.createObjectURL(value);
+        setPreview(nextPreview);
+
+        // 정리함수 - sideEffect가 종료되면 초기화를 통히 정리를해준다. 
+            (object가 더 이상 사용되지 않을때)
+        return () => {
+            setPreview();
+            URL.revokeObjectURL(nextPreview);
+        }
