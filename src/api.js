@@ -26,3 +26,16 @@ export async function createReviews(formData) {
     return response;
 }
 
+export async function deleteReview(id) {
+    const rawResponse = await fetch(`${BASE_URL}:${id}`, {
+        method: 'DELETE',
+        body: id,
+    });
+
+    if (!rawResponse.ok) {
+        throw new Error('리뷰를 삭제하는데 실패했습니다!');
+    }
+
+    const response = await rawResponse.json();
+    return response;
+}
