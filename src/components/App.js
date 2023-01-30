@@ -1,6 +1,6 @@
 import ReviewList from "./ReviewList";
 import ReviewForm from "./ReviewForm";
-import { getReviews } from "../api";
+import { createReviews, getReviews, updateReview, deleteReview } from "../api";
 import { useState, useEffect } from "react";
 
 const LIMIT = 6;
@@ -21,9 +21,23 @@ function App() {
     const handleBestClick = () => setOrder('rating');
 
     // Delete item
-    const handleDelete = (id) => {
-        const nextItems = listItems.filter((item) => item.id !== id);
-        setListItems(nextItems);
+    const handleDelete = async (id) => {
+        let result;
+
+        try {
+            setIsLoading(true);
+            setLoadingError(null);
+            result = await deleteReview(id);
+        } catch (error) {
+            setLoadingError(error);
+            return;
+        } finally {
+            setIsLoading(false);
+            handleLoad({order, offset: 0, limit: LIMIT})
+        }
+
+        // const nextItems = listItems.filter((item) => item.id !== id);
+        // setListItems(nextItems);
     }
 
     // Load items
@@ -57,6 +71,23 @@ function App() {
         handleLoad({order, offset, limit: LIMIT});
     }
 
+    // Create review
+    const handleCreateSuccess = (review) => {
+        setListItems((prevItems) => [review, ...prevItems]);
+    }
+
+    // Upadte review
+    const handleUpdateSuccess = (review) => {
+          setListItems((prevItems) => {
+            const splitIdx = prevItems.findIndex((item) => item.id === review.id);
+            return [
+                ...prevItems.slice(0, splitIdx),
+                review,
+                ...prevItems.slice(splitIdx + 1),
+            ]
+        }) 
+    }
+
     // Load items (default)
     useEffect(() => {
         handleLoad({order, offset: 0, limit: LIMIT});
@@ -68,8 +99,8 @@ function App() {
             <button onClick={handleNewestClick}>최신순</button>
             <button onClick={handleBestClick}>베스트순</button>
         </div>
-        <ReviewForm />
-        <ReviewList items={sortedItems} onDelete={handleDelete}/>
+        <ReviewForm onSubmit={createReviews} onSubmitSuccess={handleCreateSuccess}/>
+        <ReviewList items={sortedItems} onDelete={handleDelete} onUpdate={updateReview} onUpdateSuccess={handleUpdateSuccess}/>
         {hasNext && (<button disabled={isLoading} onClick={handleLoadMore}>더보기</button>)}
         {loadingError?.message && <span>{loadingError.message}</span>}
     </div>
