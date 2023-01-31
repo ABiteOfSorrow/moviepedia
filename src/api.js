@@ -42,7 +42,6 @@ export async function updateReview(id, formData) {
 export async function deleteReview(id) {
     const rawResponse = await fetch(`${BASE_URL}film-reviews/${id}`, {
         method: 'DELETE',
-        body: id,
     });
 
     if (!rawResponse.ok) {

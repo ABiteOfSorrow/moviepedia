@@ -22,22 +22,20 @@ function App() {
 
     // Delete item
     const handleDelete = async (id) => {
-        let result;
-
+        
         try {
             setIsLoading(true);
             setLoadingError(null);
-            result = await deleteReview(id);
+            const result = await deleteReview(id);
         } catch (error) {
             setLoadingError(error);
             return;
         } finally {
             setIsLoading(false);
-            handleLoad({order, offset: 0, limit: LIMIT})
         }
 
-        // const nextItems = listItems.filter((item) => item.id !== id);
-        // setListItems(nextItems);
+        const nextItems = 
+        setListItems((prevItems) => listItems.filter((item) => item.id !== id));
     }
 
     // Load items
