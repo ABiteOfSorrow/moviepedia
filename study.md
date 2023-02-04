@@ -46,3 +46,7 @@ var fullYear = now.getFullYear; 20xx년
             setPreview();
             URL.revokeObjectURL(nextPreview);
         }
+
+5. custom hook 
+    - 자주 사용되는 함수를 custom hook으로 분리할 수 있다.
+        hook 폴더로 따로 분리하여 관리하면 편하고 use로 시작하는 네이밍으로 사용 ex) useAsync

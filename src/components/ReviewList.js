@@ -39,12 +39,14 @@ function ReviewList({ items, onDelete, onUpdate, onUpdateSuccess }) {
                 if (item.id === editingId) {
 
                     const { id, imgUrl, title, rating, content } = item;
-                    const initialValues = { title, rating, content }
+                    const initialValues = { title, rating, content, imgFile: null }
+
                     const handleSubmit = (formData) => onUpdate(id, formData);
-                    const handsubmitSuccess = (review) => {
+
+                    const handleSubmitSuccess = (review) => {
                             onUpdateSuccess(review);
                             setEditingId(null);
-                            }
+                            };
 
                     return (
                         <li key={item.id}>
@@ -52,21 +54,23 @@ function ReviewList({ items, onDelete, onUpdate, onUpdateSuccess }) {
                                         initialPreview={imgUrl} 
                                         onCancel={handleCancel}
                                         onSubmit={handleSubmit}
-                                        onSubmitSuccess={handsubmitSuccess}
+                                        onSubmitSuccess={handleSubmitSuccess}
                             />
                         </li>
-                    )
+                    );
                 }
 
             return (
                 <li key={item.id}>
                     <ReviewListItem item={item} 
                                     onDelete={onDelete} 
-                                    onEdit={setEditingId}/>
+                                    onEdit={setEditingId}
+                    />
                 </li>
-            )}
-        )}
+            );
+        })}
     </ul>
-)}
+    );
+}
 
 export default ReviewList

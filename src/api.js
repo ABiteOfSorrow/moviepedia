@@ -12,7 +12,7 @@ export async function getReviews({order = 'createdAt', offset = 0, limit = 6}) {
     return response;
 }
 
-export async function createReviews(formData) {
+export async function createReview(formData) {
     const rawResponse = await fetch(`${BASE_URL}film-reviews`, {
         method: 'POST',
         body: formData,
