@@ -50,3 +50,21 @@ var fullYear = now.getFullYear; 20xx년
 5. custom hook 
     - 자주 사용되는 함수를 custom hook으로 분리할 수 있다.
         hook 폴더로 따로 분리하여 관리하면 편하고 use로 시작하는 네이밍으로 사용 ex) useAsync
+
+6. useCallback
+    useEffect의 dependency로 재생성되는 함수를 넣어주면 랜더링이 반복되며 무한루프가 발생한다.
+    이를 방지하지 위해 사용한다.
+
+    재생성되는 함수 = arguments를 받아서 가공
+    재사용되는 함수 = API 처럼 arguments를 받아서 일치하는 값만 반환 혹은 입력
+
+    ex) 
+    const handleLoad = useCallback(async (options) => {
+        ----------
+    }, [-dependency-])
+
+    dependency가 변하지 않으면 함수를 재생성이 아니라 재사용을 한다.
+    dependency에는 api를 호출하는 함수 등을 넣어주고 
+    useState의 setter는 리액트의 기본 기능이므로 넣어 줄 필요 없다.
+
+    

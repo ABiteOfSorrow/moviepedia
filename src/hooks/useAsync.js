@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 function useAsync(asyncFunction) {
     const [pending, setPending] = useState(false);
     const [error, setError] = useState(null);
 
-    const wrappedFunction = async (...args) => {
+    const wrappedFunction = useCallback(async (...args) => {
         setError(null);
         setPending(true);
         try {
@@ -15,7 +15,7 @@ function useAsync(asyncFunction) {
         } finally {
             setPending(false);
         }
-    }
+    }, [asyncFunction]);
 
     return [pending, error, wrappedFunction];
 }

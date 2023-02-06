@@ -1,8 +1,10 @@
 import ReviewList from "./ReviewList";
 import ReviewForm from "./ReviewForm";
 import { createReview, getReviews, updateReview, deleteReview } from "../api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import useAsync from "../hooks/useAsync";
+import { LocaleProvider } from "../contexts/LocaleContext";
+import LocaleSelect from "./LocaleSelect";
 
 const LIMIT = 6;
 
@@ -30,7 +32,7 @@ function App() {
     }
 
     // Load items
-    const handleLoad = async (options) => {
+    const handleLoad = useCallback(async (options) => {
         
         const result = await getReviewsAsync(options);
         if (!result) return;
@@ -44,7 +46,7 @@ function App() {
         setOffset(options.offset + reviews.length);
         setHasNext(paging.hasNext);
 
-    }
+    }, [getReviewsAsync])
 
     // Load more items
     const handleLoadMore = async () => {
@@ -71,10 +73,12 @@ function App() {
     // Load items (default)
     useEffect(() => {
         handleLoad({order, offset: 0, limit: LIMIT});
-    }, [order])
+    }, [order, handleLoad])
 
-  return (
+  return ( 
+    <LocaleProvider value={'fr'}>
     <div>
+        <LocaleSelect />
         <div>
             <button onClick={handleNewestClick}>최신순</button>
             <button onClick={handleBestClick}>베스트순</button>
@@ -84,6 +88,7 @@ function App() {
         {hasNext && (<button disabled={isLoading} onClick={handleLoadMore}>더보기</button>)}
         {loadingError?.message && <span>{loadingError.message}</span>}
     </div>
+    </LocaleProvider>
   );
 }
 
