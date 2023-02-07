@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { useLocale } from "../contexts/LocaleContext";
+import { useState,  } from "react";
+import useTranslate from "../hooks/useTranslate";
 import Rating from "./Rating";
 import ReviewForm from "./ReviewForm";
-import './styles/ReviewList.css';
+import '../styles/ReviewList.css';
 
 function formatDate(value) {
     const date = new Date(value);
@@ -12,22 +12,23 @@ function formatDate(value) {
 
 function ReviewListItem({ item, onDelete, onEdit }) {
 
-    const locale = useLocale()
+    const translate = useTranslate();
 
     const handleDeleteClick = () => onDelete(item.id);
     const handleEditClick = () => onEdit(item.id);
 
     return (
-        <div className="ReviewListItem">
+        <div className="ReviewListItem" key={item.id}>
             <img className="ReviewListItem-img" src={item.imgUrl} alt={item.title} />
-            <div>
-                <h1>{item.title}</h1>
-                <Rating value={item.rating}/>
-                <p>{formatDate(item.createdAt)}</p>
-                <p>{item.content}</p>
-                <p>Language: {locale}</p>
-                <button onClick={handleDeleteClick}>삭제</button>
-                <button onClick={handleEditClick}>수정</button>
+            <div className="ReviewListItem-rows">
+                <h1 className="ReviewListItem-title">{item.title}</h1>
+                <Rating className="ReviewListItem-rating" value={item.rating}/>
+                <p className="ReviewListItem-date">{formatDate(item.createdAt)}</p>
+                <p className="ReviewListItem-content">{item.content}</p>
+                <div className="ReviewListItem-buttons">
+                    <button className="ReviewListItem-edit-button" onClick={handleEditClick}>{translate('edit button')}</button>
+                    <button className="ReviewListItem-delete-button" onClick={handleDeleteClick}>{translate('delete button')}</button>
+                </div>
             </div>
         </div>
     )
@@ -38,7 +39,7 @@ function ReviewList({ items, onDelete, onUpdate, onUpdateSuccess }) {
     const handleCancel = () => setEditingId(null);
 
     return (
-        <ul>
+        <ul className="ReviewList">
             {items.map((item) => {
                 if (item.id === editingId) {
 

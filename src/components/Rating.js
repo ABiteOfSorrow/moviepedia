@@ -1,4 +1,4 @@
-import './styles/Rating.css'
+import '../styles/Rating.css'
 
 const RATINGS = [1, 2, 3, 4, 5];
 

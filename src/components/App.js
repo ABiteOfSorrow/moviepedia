@@ -3,19 +3,34 @@ import ReviewForm from "./ReviewForm";
 import { createReview, getReviews, updateReview, deleteReview } from "../api";
 import { useState, useEffect, useCallback } from "react";
 import useAsync from "../hooks/useAsync";
-import { LocaleProvider } from "../contexts/LocaleContext";
 import LocaleSelect from "./LocaleSelect";
+import useTranslate from '../hooks/useTranslate';
+import '../styles/App.css';
+import logoImg from '../styles/assets/logo.png';
+import ticketImg from '../styles/assets/ticket.png';
+
 
 const LIMIT = 6;
 
-function App() {
+function AppSortButton({ selected, children, onClick }) {
+    return (
+      <button
+        disabled={selected}
+        className={`AppSortButton ${selected ? 'selected' : ''}`}
+        onClick={onClick}
+      >
+        {children}
+      </button>
+    );
+  }
 
+function App() {
+    const translate = useTranslate();
     const [order, setOrder] = useState('createdAt');
     const [listItems, setListItems] = useState([]);
     const [offset, setOffset] = useState(0);
     const [hasNext, setHasNext] = useState(false);
     const [isLoading, loadingError, getReviewsAsync] = useAsync(getReviews);
-
     const sortedItems = listItems.sort((a, b) => b[order] - a[order]);
 
     // Sort items
@@ -38,7 +53,7 @@ function App() {
         if (!result) return;
 
         const { reviews, paging } = result;
-        if (options.offset === 0){
+        if (options.offset === 0) {
             setListItems(reviews);
         } else {
             setListItems((prevItems) => [...prevItems, ...reviews]);
@@ -76,19 +91,40 @@ function App() {
     }, [order, handleLoad])
 
   return ( 
-    <LocaleProvider value={'fr'}>
-    <div>
-        <LocaleSelect />
-        <div>
-            <button onClick={handleNewestClick}>최신순</button>
-            <button onClick={handleBestClick}>베스트순</button>
+    <div className="App">
+        <nav className="App-nav">
+            <div className="App-nav-container">
+                <img className="App-logo" src={logoImg} alt="MOVIDE PEDIA" />
+                <LocaleSelect />
+            </div>
+        </nav>
+        <div className="App-container">
+            <div className="App-ReviewForm" style={{backgroundImage: `url("${ticketImg}")`,}}>
+                <ReviewForm onSubmit={createReview} onSubmitSuccess={handleCreateSuccess}/>
+            </div>
+            <div className="App-sorts">
+                <AppSortButton selected={order === 'createdAt'} onClick={handleNewestClick}>
+                    {translate('newest')}
+                </AppSortButton>
+                <AppSortButton selected={order === 'rating'} onClick={handleBestClick}>
+                    {translate('best')}
+                </AppSortButton>
+            </div>
+            <div className="App-ReviewList">
+                <ReviewList items={sortedItems} onDelete={handleDelete} onUpdate={updateReview} onUpdateSuccess={handleUpdateSuccess}/>                
+                {hasNext ? (<button className="App-load-more-button" disabled={isLoading} onClick={handleLoadMore}>
+                                {translate('load more')}
+                            </button>) 
+                        : (<div className="App-load-more-button" />)}
+            {loadingError?.message && <span>{loadingError.message}</span>}
+            </div>
         </div>
-        <ReviewForm onSubmit={createReview} onSubmitSuccess={handleCreateSuccess}/>
-        <ReviewList items={sortedItems} onDelete={handleDelete} onUpdate={updateReview} onUpdateSuccess={handleUpdateSuccess}/>
-        {hasNext && (<button disabled={isLoading} onClick={handleLoadMore}>더보기</button>)}
-        {loadingError?.message && <span>{loadingError.message}</span>}
+        <footer className="App-footer">
+            <div className="App-footer-container">
+                {translate('terms of service')} | {translate('privacy policy')}
+            </div>
+      </footer>
     </div>
-    </LocaleProvider>
   );
 }
 
